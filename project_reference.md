@@ -15,7 +15,8 @@ GenAI/
 ├── app/                    # Application logic (Python backend)
 │   ├── .gitkeep
 │   ├── mock_openai_rss.xml # Mock XML feed for OpenAI blog to bypass Cloudflare
-│   ├── scraper.py          # Scraper classes (YouTubeScraper and OpenAIScraper) and Pydantic models
+│   ├── openai_scraper.py   # Scraper class (OpenAIScraper) and Pydantic models for OpenAI blog
+│   ├── youtube_scraper.py  # Scraper class (YouTubeScraper) and Pydantic models for YouTube channels
 │   ├── test_openai.py      # CLI utility to test the OpenAI blog scraper
 │   ├── test_youtube.py     # CLI utility to test YouTube channel scraper and transcript retrieval
 ├── docker/                 # Container files (PostgreSQL)
