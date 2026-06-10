@@ -1,6 +1,6 @@
 import sys
 from datetime import datetime, timezone
-from app.scraper import OpenAIScraper
+from app.openai_scraper import OpenAIScraper
 
 def main():
     print("=" * 60)

@@ -1,6 +1,6 @@
 import sys
 from datetime import datetime, timezone
-from app.scraper import YouTubeScraper, YouTubeVideo
+from app.youtube_scraper import YouTubeScraper, YouTubeVideo
 
 def main():
     print("=" * 60)
