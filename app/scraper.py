@@ -2,7 +2,24 @@ import re
 from datetime import datetime, timezone
 from calendar import timegm
 import feedparser
+from pydantic import BaseModel
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound
+
+class YouTubeVideo(BaseModel):
+    """
+    Pydantic model representing a single YouTube video.
+    """
+    video_id: str
+    title: str
+    link: str
+    published_at: datetime
+    description: str
+
+class VideoTranscript(BaseModel):
+    """
+    Pydantic model representing a YouTube video transcript.
+    """
+    text: str
 
 class YouTubeScraper:
     """
@@ -12,20 +29,10 @@ class YouTubeScraper:
         # Initialize the API client once for reuse
         self.api = YouTubeTranscriptApi()
 
-    def fetch_latest_videos(self, channel_id: str, max_age_hours: float = 24.0) -> list[dict]:
+    def fetch_latest_videos(self, channel_id: str, max_age_hours: float = 24.0) -> list[YouTubeVideo]:
         """
         Fetches latest videos from a YouTube channel RSS feed using its Channel ID and filters them by time.
-        Returns a list of videos:
-          [
-            {
-              "video_id": "...",
-              "title": "...",
-              "link": "...",
-              "published_at": datetime,
-              "description": "..."
-            },
-            ...
-          ]
+        Returns a list of YouTubeVideo Pydantic models.
         """
         # Channel ID validation
         if not (channel_id.startswith("UC") and len(channel_id) == 24):
@@ -73,13 +80,15 @@ class YouTubeScraper:
                     elif hasattr(entry, "summary"):
                         description = entry.summary
                     
-                    filtered_videos.append({
-                        "video_id": video_id,
-                        "title": entry.title,
-                        "link": entry.link,
-                        "published_at": published_dt,
-                        "description": description
-                    })
+                    # Instantiate Pydantic model
+                    video_model = YouTubeVideo(
+                        video_id=video_id,
+                        title=entry.title,
+                        link=entry.link,
+                        published_at=published_dt,
+                        description=description
+                    )
+                    filtered_videos.append(video_model)
             
             return filtered_videos
 
@@ -87,15 +96,19 @@ class YouTubeScraper:
             print(f"Error fetching RSS feed for channel {channel_id}: {e}")
             return []
 
-    def get_video_transcript(self, video_id: str) -> str | None:
+    def get_video_transcript(self, video_id: str) -> VideoTranscript | None:
         """
         Fetches the full transcript text of a YouTube video using the youtube-transcript-api.
-        Returns the transcript as a single unified string, or None if transcripts are unavailable.
+        Returns a VideoTranscript Pydantic model, or None if transcripts are unavailable.
         """
         try:
             transcript_list = self.api.fetch(video_id)
+            # Join lines with spaces using the text attribute
             text_lines = [item.text for item in transcript_list]
-            return " ".join(text_lines)
+            full_text = " ".join(text_lines)
+            
+            # Return as VideoTranscript Pydantic model
+            return VideoTranscript(text=full_text)
         except (TranscriptsDisabled, NoTranscriptFound) as e:
             print(f"Transcript not available for video {video_id}: {e}")
             return None

@@ -45,6 +45,7 @@ GenAI/
 - `youtube-transcript-api` (YouTube video transcripts)
 - `python-dotenv` (Environment config management)
 - `resend` (Email client)
+- `pydantic` (Data validation and models)
 
 ---
 
@@ -63,7 +64,7 @@ pip install -e .
 
 *Note: The manual `pip install` commands for these libraries are documented below for reference:*
 ```bash
-pip install sqlalchemy psycopg2-binary google-genai requests beautifulsoup4 feedparser youtube-transcript-api python-dotenv resend
+pip install sqlalchemy psycopg2-binary google-genai requests beautifulsoup4 feedparser youtube-transcript-api python-dotenv resend pydantic
 ```
 
 ---
