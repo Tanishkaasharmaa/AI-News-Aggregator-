@@ -14,8 +14,8 @@ GenAI/
 │   └── .gitkeep
 ├── app/                    # Application logic (Python backend)
 │   ├── .gitkeep
+│   ├── scraper.py          # Contains YouTubeScraper class (and later blog scraping logic)
 │   ├── test_youtube.py     # CLI utility to test YouTube channel scraper and transcript retrieval
-│   └── youtube_scraper.py  # Scraping logic for YouTube RSS feeds and subtitles
 ├── docker/                 # Container files (PostgreSQL)
 │   └── .gitkeep
 ├── project_reference.md    # This reference document
