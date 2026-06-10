@@ -1,10 +1,10 @@
 import sys
 from datetime import datetime, timezone
-from app.youtube_scraper import fetch_latest_videos, get_video_transcript
+from app.scraper import YouTubeScraper
 
 def main():
     print("=" * 60)
-    print("YouTube Scraping & Transcript Test Utility (Channel IDs)")
+    print("YouTube Scraping & Transcript Test Utility (YouTubeScraper Class)")
     print("=" * 60)
 
     # Dictionary of test channels: Name -> Channel ID
@@ -13,13 +13,16 @@ def main():
         "3Blue1Brown": "UCYO_jab_esuFRV4b17AJtAw",
     }
 
+    # Instantiate the scraper class
+    scraper = YouTubeScraper()
+
     print("\n--- TEST 1: Fetching Latest Videos (Last 7 Days / 168 Hours for testing) ---")
     max_age_hours = 168.0  # Use 7 days to make sure we find at least one video
     
     first_video_found = None
     for name, channel_id in test_channels.items():
         print(f"Fetching videos for {name} (ID: {channel_id}) from the last {max_age_hours} hours...")
-        videos = fetch_latest_videos(channel_id, max_age_hours=max_age_hours)
+        videos = scraper.fetch_latest_videos(channel_id, max_age_hours=max_age_hours)
         print(f"  Found {len(videos)} videos:")
         for idx, video in enumerate(videos, start=1):
             print(f"    {idx}. [{video['published_at']}] {video['title']}")
@@ -31,7 +34,6 @@ def main():
     # Fallback if no videos found in the last 7 days
     if not first_video_found:
         print("No videos found in the last 7 days. Trying with a default video ID for transcript test...")
-        # A specific 3Blue1Brown video with subtitles: "d2ixUSNCv1A"
         first_video_found = {
             "video_id": "d2ixUSNCv1A",
             "title": "Default Test Video (3Blue1Brown)",
@@ -43,11 +45,10 @@ def main():
     print(f"Video ID: {first_video_found['video_id']}")
     print("Retrieving...")
     
-    transcript = get_video_transcript(first_video_found["video_id"])
+    transcript = scraper.get_video_transcript(first_video_found["video_id"])
     if transcript:
         print("  SUCCESS!")
         print("-" * 50)
-        # Show first 500 characters of the transcript
         preview = transcript[:500] + "..." if len(transcript) > 500 else transcript
         print(preview)
         print("-" * 50)
