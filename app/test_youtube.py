@@ -9,7 +9,7 @@ def main():
 
     # Dictionary of test channels: Name -> Channel ID
     test_channels = {
-        "OpenAI": "UCf2ocK7dG_W7j9DpH_7RUzQ",
+        "OpenAI": "UCXZCJLdBC09xxGZ6gcdrc6A",
         "3Blue1Brown": "UCYO_jab_esuFRV4b17AJtAw",
     }
 

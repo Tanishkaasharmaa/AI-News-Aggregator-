@@ -87,8 +87,11 @@ def get_video_transcript(video_id: str) -> str | None:
     Returns the transcript as a single unified string, or None if transcripts are unavailable.
     """
     try:
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
-        text_lines = [item["text"] for item in transcript_list]
+        # Instantiate and fetch
+        api = YouTubeTranscriptApi()
+        transcript_list = api.fetch(video_id)
+        # Join lines with spaces using the text attribute
+        text_lines = [item.text for item in transcript_list]
         return " ".join(text_lines)
     except (TranscriptsDisabled, NoTranscriptFound) as e:
         print(f"Transcript not available for video {video_id}: {e}")
